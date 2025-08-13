@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: nys-emergency-relief-system
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/relief_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  
+  security:
+    user:
+      name: admin
+      password: admin123
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:NYSEmergencyReliefSystemSecretKey2025VeryLongSecretKeyForHS512Algorithm}
+  expiration: 86400000  # 24 hours in milliseconds
+
+# Logging
+logging:
+  level:
+    com.ny.safeny: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
