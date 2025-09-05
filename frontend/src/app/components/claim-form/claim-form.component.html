@@ -1,0 +1,191 @@
+<div class="claim-form-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1 class="system-title">Submit Emergency Relief Claim</h1>
+      <button type="button" class="btn-logout" (click)="cancel()">Back to Dashboard</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container" id="main-content">
+    
+    <!-- Success Message -->
+    <div *ngIf="success" class="alert alert-success" role="alert">
+      <strong>Success!</strong> Your claim has been submitted successfully.
+      Redirecting to My Claims...
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="alert alert-error" role="alert">
+      <strong>Error!</strong> {{ error }}
+    </div>
+
+    <!-- Claim Form -->
+    <form [formGroup]="claimForm" (ngSubmit)="onSubmit()" class="claim-form">
+      
+      <div class="form-section">
+        <h2>Disaster Information</h2>
+
+        <!-- Disaster Type -->
+        <div class="form-group">
+          <label for="disasterType" class="required">
+            Type of Disaster
+          </label>
+          <select 
+            id="disasterType" 
+            formControlName="disasterType"
+            [attr.aria-invalid]="f['disasterType'].invalid && f['disasterType'].touched"
+            [attr.aria-describedby]="f['disasterType'].invalid && f['disasterType'].touched ? 'disasterType-error' : null"
+          >
+            <option value="">Select disaster type</option>
+            <option *ngFor="let type of disasterTypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+          <div 
+            *ngIf="f['disasterType'].invalid && f['disasterType'].touched" 
+            class="error-message"
+            id="disasterType-error"
+            role="alert"
+          >
+            Disaster type is required
+          </div>
+        </div>
+
+        <!-- Incident Date -->
+        <div class="form-group">
+          <label for="incidentDate" class="required">
+            Date of Incident
+          </label>
+          <input 
+            type="date" 
+            id="incidentDate" 
+            formControlName="incidentDate"
+            [max]="getCurrentDate()"
+            [attr.aria-invalid]="f['incidentDate'].invalid && f['incidentDate'].touched"
+            [attr.aria-describedby]="f['incidentDate'].invalid && f['incidentDate'].touched ? 'incidentDate-error' : null"
+          />
+          <div 
+            *ngIf="f['incidentDate'].invalid && f['incidentDate'].touched" 
+            class="error-message"
+            id="incidentDate-error"
+            role="alert"
+          >
+            Incident date is required
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label for="location" class="required">
+            Location
+          </label>
+          <input 
+            type="text" 
+            id="location" 
+            formControlName="location"
+            placeholder="City, County, NY"
+            [attr.aria-invalid]="f['location'].invalid && f['location'].touched"
+            [attr.aria-describedby]="f['location'].invalid && f['location'].touched ? 'location-error' : null"
+          />
+          <div 
+            *ngIf="f['location'].invalid && f['location'].touched" 
+            class="error-message"
+            id="location-error"
+            role="alert"
+          >
+            Location is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>Damage Description</h2>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description" class="required">
+            Description of Damage
+          </label>
+          <textarea 
+            id="description" 
+            formControlName="description"
+            rows="6"
+            placeholder="Please provide detailed description of the damage (minimum 20 characters)"
+            [attr.aria-invalid]="f['description'].invalid && f['description'].touched"
+            [attr.aria-describedby]="f['description'].invalid && f['description'].touched ? 'description-error' : null"
+          ></textarea>
+          <div class="form-text">
+            Minimum 20 characters required
+          </div>
+          <div 
+            *ngIf="f['description'].invalid && f['description'].touched" 
+            class="error-message"
+            id="description-error"
+            role="alert"
+          >
+            <span *ngIf="f['description'].errors?.['required']">Description is required</span>
+            <span *ngIf="f['description'].errors?.['minlength']">
+              Description must be at least 20 characters
+            </span>
+          </div>
+        </div>
+
+        <!-- Request Amount -->
+        <div class="form-group">
+          <label for="requestAmount" class="required">
+            Requested Relief Amount ($)
+          </label>
+          <input 
+            type="number" 
+            id="requestAmount" 
+            formControlName="requestAmount"
+            placeholder="5000"
+            min="100"
+            max="50000"
+            step="100"
+            [attr.aria-invalid]="f['requestAmount'].invalid && f['requestAmount'].touched"
+            [attr.aria-describedby]="f['requestAmount'].invalid && f['requestAmount'].touched ? 'requestAmount-error' : null"
+          />
+          <div class="form-text">
+            Amount between $100 and $50,000
+          </div>
+          <div 
+            *ngIf="f['requestAmount'].invalid && f['requestAmount'].touched" 
+            class="error-message"
+            id="requestAmount-error"
+            role="alert"
+          >
+            <span *ngIf="f['requestAmount'].errors?.['required']">Request amount is required</span>
+            <span *ngIf="f['requestAmount'].errors?.['min']">
+              Minimum amount is $100
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-block"
+          [disabled]="loading || claimForm.invalid"
+        >
+          <span *ngIf="!loading">Submit Claim</span>
+          <span *ngIf="loading">Submitting...</span>
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-secondary btn-block"
+          (click)="cancel()"
+          [disabled]="loading"
+        >
+          Cancel
+        </button>
+      </div>
+
+    </form>
+
+  </main>
+</div>
