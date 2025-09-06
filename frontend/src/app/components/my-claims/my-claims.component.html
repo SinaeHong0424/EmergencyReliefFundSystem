@@ -1,0 +1,152 @@
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header class="dashboard-header" role="banner">
+  <div class="header-content">
+    <div class="logo-section">
+      <h1 class="system-title">NYS Emergency Relief</h1>
+    </div>
+    
+    <nav class="main-nav" role="navigation" aria-label="Main navigation">
+      <ul class="nav-list">
+        <li><a routerLink="/dashboard" class="nav-link">Dashboard</a></li>
+        <li><a routerLink="/my-claims" class="nav-link active" aria-current="page">My Claims</a></li>
+        <li><a routerLink="/claim-form" class="nav-link">New Claim</a></li>
+      </ul>
+    </nav>
+
+    <div class="user-section">
+      <button type="button" class="btn-logout" (click)="navigateToDashboard()">Dashboard</button>
+    </div>
+  </div>
+</header>
+
+<main id="main-content" role="main" class="my-claims-main">
+  <div class="container">
+    
+    <section class="page-header">
+      <h2>My Emergency Relief Claims</h2>
+      <button type="button" class="btn-primary" (click)="navigateToNewClaim()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        New Claim
+      </button>
+    </section>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading" role="status">
+      <div class="spinner-large"></div>
+      <p>Loading your claims...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !loading" class="alert alert-error" role="alert">
+      {{ error }}
+    </div>
+
+    <!-- Claims Content -->
+    <div *ngIf="!loading && !error">
+      
+      <!-- Filters -->
+      <section class="filters-section">
+        <div class="filter-group">
+          <label for="statusFilter">Filter by Status:</label>
+          <select id="statusFilter" [(ngModel)]="filterStatus" (change)="onFilterChange()" class="form-control">
+            <option value="ALL">All Claims</option>
+            <option value="PENDING">Pending</option>
+            <option value="UNDER_REVIEW">Under Review</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="searchTerm">Search:</label>
+          <input
+            type="text"
+            id="searchTerm"
+            [(ngModel)]="searchTerm"
+            (input)="onFilterChange()"
+            placeholder="Search by location, type..."
+            class="form-control"
+          />
+        </div>
+
+        <div class="filter-group">
+          <label for="sortBy">Sort by:</label>
+          <select id="sortBy" [(ngModel)]="sortBy" (change)="onFilterChange()" class="form-control">
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="amount-desc">Highest Amount</option>
+            <option value="amount-asc">Lowest Amount</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Results Summary -->
+      <div class="results-summary" role="status" aria-live="polite">
+        Showing {{ filteredClaims.length }} of {{ claims.length }} claims
+      </div>
+
+      <!-- No Claims -->
+      <div *ngIf="filteredClaims.length === 0" class="no-claims">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        <h3>No claims found</h3>
+        <p *ngIf="filterStatus === 'ALL' && !searchTerm">You haven't submitted any claims yet.</p>
+        <p *ngIf="filterStatus !== 'ALL' || searchTerm">Try adjusting your filters or search term.</p>
+        <button type="button" class="btn-primary" (click)="navigateToNewClaim()">
+          Submit Your First Claim
+        </button>
+      </div>
+
+      <!-- Claims List -->
+      <div *ngIf="filteredClaims.length > 0" class="claims-list">
+        <article *ngFor="let claim of filteredClaims" class="claim-card">
+          <div class="claim-header">
+            <div class="claim-id">Claim #{{ claim.id }}</div>
+            <span class="status-badge" [ngClass]="getStatusClass(claim.status)">
+              {{ claim.status }}
+            </span>
+          </div>
+
+          <div class="claim-body">
+            <div class="claim-info">
+              <div class="info-row">
+                <strong>Type:</strong>
+                <span>{{ getDisasterTypeLabel(claim.disasterType) }}</span>
+              </div>
+              <div class="info-row">
+                <strong>Location:</strong>
+                <span>{{ claim.location }}</span>
+              </div>
+              <div class="info-row">
+                <strong>Incident Date:</strong>
+                <span>{{ claim.incidentDate | date:'MMM d, y' }}</span>
+              </div>
+              <div class="info-row">
+                <strong>Submitted:</strong>
+                <span>{{ claim.createdAt | date:'MMM d, y' }}</span>
+              </div>
+            </div>
+
+            <div class="claim-amount">
+              <div class="amount-label">Requested Amount</div>
+              <div class="amount-value">${{ claim.requestAmount | number:'1.2-2' }}</div>
+            </div>
+          </div>
+
+          <div class="claim-description">
+            <strong>Description:</strong>
+            <p>{{ claim.description }}</p>
+          </div>
+        </article>
+      </div>
+
+    </div>
+
+  </div>
+</main>
