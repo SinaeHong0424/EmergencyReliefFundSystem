@@ -1,0 +1,186 @@
+<div class="admin-dashboard">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1 class="system-title">Admin Dashboard - NYS Emergency Relief</h1>
+      <div class="user-section">
+        <span class="user-name">{{ currentUser?.fullName }}</span>
+        <button (click)="logout()" class="btn-logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    
+    <section class="statistics-section">
+      <h2>Claims Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Claims</h3>
+          <p class="stat-number">{{ stats.total }}</p>
+        </div>
+        <div class="stat-card stat-pending">
+          <h3>Pending</h3>
+          <p class="stat-number">{{ stats.pending }}</p>
+        </div>
+        <div class="stat-card stat-review">
+          <h3>Under Review</h3>
+          <p class="stat-number">{{ stats.underReview }}</p>
+        </div>
+        <div class="stat-card stat-approved">
+          <h3>Approved</h3>
+          <p class="stat-number">{{ stats.approved }}</p>
+        </div>
+        <div class="stat-card stat-rejected">
+          <h3>Rejected</h3>
+          <p class="stat-number">{{ stats.rejected }}</p>
+        </div>
+        <div class="stat-card stat-paid">
+          <h3>Paid</h3>
+          <p class="stat-number">{{ stats.paid }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pending-claims-section">
+      <h2>Pending Claims for Review</h2>
+      
+      <div *ngIf="loading" class="loading">
+        Loading claims...
+      </div>
+
+      <div *ngIf="!loading && pendingClaims.length === 0" class="no-claims">
+        No pending claims
+      </div>
+
+      <div *ngIf="!loading && pendingClaims.length > 0" class="claims-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Disaster Type</th>
+              <th>Location</th>
+              <th>Amount</th>
+              <th>Date Submitted</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let claim of pendingClaims">
+              <td>{{ claim.id }}</td>
+              <td>{{ claim.user?.fullName || 'N/A' }}</td>
+              <td>{{ claim.disasterType }}</td>
+              <td>{{ claim.location }}</td>
+              <td>{{ formatCurrency(claim.requestAmount) }}</td>
+              <td>{{ formatDate(claim.createdAt) }}</td>
+              <td>
+                <button (click)="selectClaim(claim)" class="btn btn-primary">
+                  Review
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="all-claims-section">
+      <h2>All Claims</h2>
+      
+      <div *ngIf="!loading && allClaims.length > 0" class="claims-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Disaster Type</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let claim of allClaims">
+              <td>{{ claim.id }}</td>
+              <td>{{ claim.user?.fullName || 'N/A' }}</td>
+              <td>{{ claim.disasterType }}</td>
+              <td>{{ formatCurrency(claim.requestAmount) }}</td>
+              <td>
+                <span [class]="getStatusClass(claim.status)">
+                  {{ claim.status }}
+                </span>
+              </td>
+              <td>{{ formatDate(claim.createdAt) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <div *ngIf="selectedClaim" class="modal-overlay" (click)="cancelReview()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>Review Claim #{{ selectedClaim.id }}</h2>
+      
+      <div class="claim-details">
+        <div class="detail-row">
+          <strong>User:</strong> {{ selectedClaim.user?.fullName }}
+        </div>
+        <div class="detail-row">
+          <strong>Email:</strong> {{ selectedClaim.user?.email }}
+        </div>
+        <div class="detail-row">
+          <strong>Disaster Type:</strong> {{ selectedClaim.disasterType }}
+        </div>
+        <div class="detail-row">
+          <strong>Incident Date:</strong> {{ formatDate(selectedClaim.incidentDate) }}
+        </div>
+        <div class="detail-row">
+          <strong>Location:</strong> {{ selectedClaim.location }}
+        </div>
+        <div class="detail-row">
+          <strong>Requested Amount:</strong> {{ formatCurrency(selectedClaim.requestAmount) }}
+        </div>
+        <div class="detail-row">
+          <strong>Description:</strong>
+          <p>{{ selectedClaim.description }}</p>
+        </div>
+      </div>
+
+      <div class="review-form">
+        <div class="form-group">
+          <label for="reviewComments">Review Comments</label>
+          <textarea
+            id="reviewComments"
+            [(ngModel)]="reviewComments"
+            rows="4"
+            placeholder="Enter your review comments..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="approvedAmount">Approved Amount (optional)</label>
+          <input
+            type="number"
+            id="approvedAmount"
+            [(ngModel)]="approvedAmount"
+            [placeholder]="selectedClaim.requestAmount?.toString() || ''"
+          />
+        </div>
+
+        <div class="button-group">
+          <button (click)="approveClaim()" class="btn btn-success">
+            Approve
+          </button>
+          <button (click)="rejectClaim()" class="btn btn-danger">
+            Reject
+          </button>
+          <button (click)="cancelReview()" class="btn btn-secondary">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
