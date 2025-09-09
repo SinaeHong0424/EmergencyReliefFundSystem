@@ -1,0 +1,565 @@
+/* ============================================
+   WCAG 2.1 AA Compliant Global Styles
+   ============================================ */
+
+/* CSS Variables for Accessibility */
+:root {
+  --color-primary: #0066cc;
+  --color-primary-dark: #004499;
+  --color-secondary: #6c757d;
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+  --color-warning: #ffc107;
+  --color-info: #17a2b8;
+  --color-text: #212529;
+  --color-text-light: #6c757d;
+  --color-background: #ffffff;
+  --color-background-light: #f8f9fa;
+  --color-border: #dee2e6;
+  --color-border-focus: #0066cc;
+  --focus-outline: 3px solid #0066cc;
+  --focus-outline-offset: 2px;
+  --font-size-base: 16px;
+  --font-size-small: 14px;
+  --font-size-large: 18px;
+  --font-size-xl: 20px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --transition-speed: 0.3s;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+/* ============================================
+   Skip Links - WCAG 2.4.1
+   ============================================ */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  border: 2px solid white;
+}
+
+.skip-link:focus {
+  top: 10px;
+  outline: none;
+}
+
+.skip-link::before {
+  content: '⚡ ';
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.skip-link:hover:focus {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: scale(1.05);
+}
+
+/* High Contrast Mode Skip Link */
+.high-contrast .skip-link {
+  background: #000000;
+  color: #ffffff;
+  border: 3px solid #ffffff;
+}
+
+.high-contrast .skip-link:focus {
+  background: #ffffff;
+  color: #000000;
+  border: 3px solid #000000;
+}
+
+/* ============================================
+   High Contrast Mode - WCAG 1.4.3
+   ============================================ */
+.high-contrast {
+  --color-primary: #0000ff;
+  --color-primary-dark: #000080;
+  --color-text: #000000;
+  --color-background: #ffffff;
+  --color-border: #000000;
+  --focus-outline: 4px solid #000000;
+}
+
+.high-contrast * {
+  border-color: #000000 !important;
+}
+
+.high-contrast button,
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+  border: 2px solid #000000 !important;
+}
+
+/* ============================================
+   Font Size Classes - WCAG 1.4.4
+   ============================================ */
+.font-small { font-size: 14px; }
+.font-medium { font-size: 16px; }
+.font-large { font-size: 18px; }
+.font-x-large { font-size: 20px; }
+
+/* ============================================
+   Reduced Motion - WCAG 2.3.3
+   ============================================ */
+.reduced-motion,
+.reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   Focus Indicators - WCAG 2.4.7
+   ============================================ */
+*:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+a:focus, button:focus, input:focus, select:focus, textarea:focus, [tabindex]:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* ============================================
+   Screen Reader Only - WCAG 1.3.1
+   ============================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================
+   Typography - WCAG 1.4.8
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: var(--spacing-md);
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.125rem; }
+h6 { font-size: 1rem; }
+
+p {
+  margin-bottom: var(--spacing-md);
+  max-width: 70ch;
+}
+
+/* ============================================
+   Links - WCAG 2.4.4
+   ============================================ */
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+a:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+a:not([class]) {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+/* ============================================
+   Buttons - WCAG 2.5.5 (Target Size)
+   ============================================ */
+button {
+  cursor: pointer;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  transition: all var(--transition-speed) ease;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-primary:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.btn-danger {
+  background-color: var(--color-danger);
+  color: white;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* ============================================
+   Form Controls - WCAG 1.3.5, 3.3.2
+   ============================================ */
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.required::after {
+  content: " *";
+  color: var(--color-danger);
+  font-weight: bold;
+}
+
+.required-indicator {
+  color: var(--color-danger);
+  margin-left: 4px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  min-height: 44px;
+  transition: border-color var(--transition-speed) ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: var(--focus-outline);
+  outline-offset: 0;
+  border-color: var(--color-border-focus);
+}
+
+.is-invalid,
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--color-danger);
+  border-width: 2px;
+}
+
+.form-text {
+  display: block;
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-size-small);
+  color: var(--color-text-light);
+}
+
+.error-message {
+  color: var(--color-danger);
+  font-size: var(--font-size-small);
+  margin-top: var(--spacing-sm);
+  font-weight: 500;
+}
+
+/* ============================================
+   Alerts - WCAG 1.4.3
+   ============================================ */
+.alert {
+  padding: 16px 20px;
+  border-radius: 4px;
+  margin-bottom: var(--spacing-lg);
+  border: 2px solid transparent;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border-color: #ffeaa7;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-color: #bee5eb;
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+.card {
+  background: var(--color-background);
+  border-radius: 8px;
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ============================================
+   Tables - WCAG 1.3.1
+   ============================================ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--spacing-lg);
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  background-color: var(--color-background-light);
+  font-weight: 600;
+}
+
+/* ============================================
+   Loading States
+   ============================================ */
+.loading {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-light);
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   Responsive Design - WCAG 1.4.10
+   ============================================ */
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+    padding: var(--spacing-lg);
+  }
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 2rem; }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.mt-1 { margin-top: var(--spacing-sm); }
+.mt-2 { margin-top: var(--spacing-md); }
+.mt-3 { margin-top: var(--spacing-lg); }
+
+.mb-1 { margin-bottom: var(--spacing-sm); }
+.mb-2 { margin-bottom: var(--spacing-md); }
+.mb-3 { margin-bottom: var(--spacing-lg); }
+
+.hidden { display: none !important; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================
+   Dashboard Header - Shared Styles
+   ============================================ */
+.dashboard-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.system-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  background-color: rgba(255,255,255,0.2);
+}
+
+.nav-link.active {
+  background-color: rgba(255,255,255,0.3);
+  font-weight: 600;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.btn-logout {
+  background-color: rgba(255,255,255,0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn-logout:hover {
+  background-color: rgba(255,255,255,0.3);
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
